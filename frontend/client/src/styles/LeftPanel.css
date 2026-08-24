@@ -1,0 +1,103 @@
+.left-panel{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:20px;
+
+    padding:20px;
+
+    height:100%;
+
+    overflow-y:auto;
+
+}
+
+.panel-card{
+
+    background:#2d2d30;
+
+    border:1px solid #3c3c3c;
+
+    border-radius:12px;
+
+    padding:18px;
+
+}
+
+.panel-card h2{
+
+    margin-top:0;
+
+    margin-bottom:15px;
+
+    color:#4FC3F7;
+
+    border-bottom:1px solid #3c3c3c;
+
+    padding-bottom:10px;
+
+}
+
+.panel-card p{
+
+    margin:10px 0;
+
+    color:#d4d4d4;
+
+    line-height:1.5;
+
+}
+
+.problem-title{
+
+    font-size:20px;
+
+    font-weight:bold;
+
+    margin-bottom:10px;
+
+}
+
+.problem-difficulty{
+
+    display:inline-block;
+
+    background:#1f6feb;
+
+    padding:5px 10px;
+
+    border-radius:20px;
+
+    margin-bottom:15px;
+
+    font-size:13px;
+
+}
+
+.problem-btn{
+
+    width:100%;
+
+    padding:10px;
+
+    background:#0078d4;
+
+    border:none;
+
+    border-radius:8px;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+}
+
+.problem-btn:hover{
+
+    background:#106ebe;
+
+}

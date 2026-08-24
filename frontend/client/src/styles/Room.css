@@ -1,0 +1,64 @@
+.code-room-container{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #1e1e1e;
+    color: white;
+}
+
+/* ================= HEADER ================= */
+
+.code-room-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 15px 25px;
+
+    background-color: #252526;
+
+    border-bottom: 1px solid #3c3c3c;
+}
+
+.code-room-header h1{
+    margin: 0;
+    font-size: 26px;
+}
+
+/* ================= MAIN ================= */
+
+.code-room-main{
+
+    flex: 1;
+
+    display: grid;
+
+    grid-template-columns: 320px 1fr;
+
+    overflow: hidden;
+
+}
+
+/* Left Panel */
+
+.code-room-main > :first-child{
+
+    background-color: #252526;
+
+    border-right: 1px solid #3c3c3c;
+
+    overflow-y: auto;
+
+}
+
+/* Editor */
+
+.code-room-main > :last-child{
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+}
