@@ -135,65 +135,26 @@ const joinRoom = async (req, res) => {
 // ===============================
 const getMyRooms = async (req, res) => {
   try {
-    const inactiveThreshold =
-      new Date(Date.now() - 30 * 60 * 1000);
-
-    // Find inactive rooms
-    const inactiveRooms = await Room.find({
-      lastActivity: {
-        $lt: inactiveThreshold,
-      },
-      status: "active",
-    });
-
-    // Remove memberships from inactive rooms
-    if (inactiveRooms.length > 0) {
-      const inactiveRoomIds =
-        inactiveRooms.map((room) => room._id);
-
-      await RoomMember.deleteMany({
-        room: {
-          $in: inactiveRoomIds,
-        },
-      });
-
-      await Room.updateMany(
-        {
-          _id: {
-            $in: inactiveRoomIds,
-          },
-        },
-        {
-          $set: {
-            status: "completed",
-          },
-        }
-      );
-    }
-
     // Rooms where the user is currently a member
-    const memberships =
-      await RoomMember.find({
-        user: req.user.id,
-      })
-        .populate("room")
-        .sort({ createdAt: -1 });
+    const memberships = await RoomMember.find({
+      user: req.user.id,
+    })
+      .populate("room")
+      .sort({ createdAt: -1 });
 
 
     // Rooms created by the user
-    // These must remain visible even after
-    // the owner leaves the room.
-    const createdRooms =
-      await Room.find({
-        owner: req.user.id,
-      }).sort({ createdAt: -1 });
+    // Owner rooms remain visible even after leaving.
+    const createdRooms = await Room.find({
+      owner: req.user.id,
+    }).sort({ createdAt: -1 });
 
 
-    // Use a Map to prevent duplicate rooms
+    // Prevent duplicate rooms
     const roomMap = new Map();
 
 
-    // Add rooms where user is a member
+    // Add rooms where the user is a member
     memberships.forEach((membership) => {
 
       if (!membership.room) {
@@ -212,8 +173,6 @@ const getMyRooms = async (req, res) => {
 
 
     // Add rooms created by the user
-    // This guarantees owner rooms remain visible
-    // even when their RoomMember record was deleted.
     createdRooms.forEach((room) => {
 
       roomMap.set(
