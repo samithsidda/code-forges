@@ -1,0 +1,205 @@
+/* ==========================================================================
+   AI ASSISTANT STYLES
+   ========================================================================== */
+
+.ai-assistant {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+    background-color: #0d1117;
+    border-left: 1px solid var(--border-color);
+}
+
+/* ================= HEADER ================= */
+
+.ai-header {
+    padding: 16px;
+    background: #161b22;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.ai-header h2 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-header h2::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--accent-ai);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent-ai);
+}
+
+.ai-header p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* ================= QUICK ACTIONS ================= */
+
+.ai-quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 12px;
+    background: #111620;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.ai-quick-actions button {
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    transition: var(--transition-fast);
+}
+
+.ai-quick-actions button:hover {
+    background-color: var(--bg-surface-hover);
+    border-color: var(--accent-ai);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.ai-quick-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ================= MESSAGES ================= */
+
+.ai-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: #0d1117;
+}
+
+.ai-message {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ai-message.user {
+    align-items: flex-end;
+}
+
+.ai-message.assistant {
+    align-items: flex-start;
+}
+
+.ai-message-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0 2px;
+}
+
+.ai-message-content {
+    max-width: 92%;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 13px;
+    line-height: 1.55;
+    box-shadow: var(--shadow-sm);
+}
+
+.ai-message.assistant .ai-message-content {
+    background-color: #161b22;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-top-left-radius: 2px;
+}
+
+.ai-message.user .ai-message-content {
+    background-color: var(--accent-primary);
+    color: #ffffff;
+    border-top-right-radius: 2px;
+}
+
+/* ================= INPUT CONTAINER ================= */
+
+.ai-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    background: #161b22;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.ai-input-container textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 60px;
+    max-height: 120px;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background-color: #0d1117;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.4;
+    outline: none;
+    transition: var(--transition-fast);
+}
+
+.ai-input-container textarea:focus {
+    border-color: var(--accent-ai);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+}
+
+.ai-input-container button {
+    padding: 9px;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    background-color: var(--accent-ai);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 13px;
+    transition: var(--transition-fast);
+    box-shadow: 0 2px 6px rgba(139, 92, 246, 0.25);
+}
+
+.ai-input-container button:hover {
+    background-color: #7c3aed;
+    transform: translateY(-1px);
+}
+
+.ai-input-container button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}

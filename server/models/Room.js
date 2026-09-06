@@ -8,15 +8,18 @@ const roomSchema = new mongoose.Schema(
       trim: true,
     },
 
-    description: {
+    topic: {
       type: String,
+      default: "",
       trim: true,
     },
 
-    language: {
+    roomCode: {
       type: String,
-      enum: ["Java", "Python", "C", "C++", "JavaScript"],
-      default: "Java",
+      required: true,
+      unique: true,
+      uppercase: true,
+      trim: true,
     },
 
     owner: {
@@ -25,38 +28,22 @@ const roomSchema = new mongoose.Schema(
       required: true,
     },
 
-    mode: {
-      type: String,
-      enum: ["practice", "collaboration"],
-      default: "practice",
-    },
-
-    isPrivate: {
-      type: Boolean,
-      default: false,
-    },
-
-    roomCode: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-
-    status: {
-      type: String,
-      enum: ["waiting", "active", "completed"],
-      default: "waiting",
-    },
-
-    revealSolutions: {
-      type: Boolean,
-      default: false,
-    },
     problem: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Problem",
       default: null,
-    }
+    },
+
+    status: {
+      type: String,
+      enum: ["active", "completed"],
+      default: "active",
+    },
+
+    lastActivity: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,

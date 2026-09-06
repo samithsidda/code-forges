@@ -3,7 +3,10 @@ import Editor from "@monaco-editor/react";
 import "../styles/CodeEditor.css";
 import languages from "../utils/languages";
 
-function CodeEditor() {
+function CodeEditor({code,
+    onCodeChange,
+    onRunCode,
+    isRunning,}) {
 
     const [language, setLanguage] = useState("java");
 
@@ -11,33 +14,51 @@ function CodeEditor() {
 
     const [fontSize, setFontSize] = useState(16);
 
-    const [code, setCode] = useState(
-        languages.java.boilerplate
-    );
+
+    // STDIN state
+    const [input, setInput] = useState("");
+
 
     const handleLanguageChange = (e) => {
 
-            const selectedLanguage = e.target.value;
+        const selectedLanguage = e.target.value;
 
-            if (
-                code.trim() !== languages[language].boilerplate.trim()
-            ) {
+        if (
+            code.trim() !== languages[language].boilerplate.trim()
+        ) {
 
-                const confirmChange = window.confirm(
-                    "Changing the language will replace your current code. Do you want to continue?"
-                );
+            const confirmChange = window.confirm(
+                "Changing the language will replace your current code. Do you want to continue?"
+            );
 
-                if (!confirmChange) {
-                    return;
-                }
-
+            if (!confirmChange) {
+                return;
             }
 
-            setLanguage(selectedLanguage);
+        }
 
-            setCode(languages[selectedLanguage].boilerplate);
+        setLanguage(selectedLanguage);
 
-        };
+        onCodeChange(
+            languages[selectedLanguage].boilerplate
+        );
+
+    };
+
+
+    const handleRunCode = () => {
+
+        console.log("RUN BUTTON CLICKED");
+
+        onRunCode({
+            code,
+            language,
+            version: languages[language].version,
+            input,
+        });
+
+    };
+
 
     return (
 
@@ -50,38 +71,58 @@ function CodeEditor() {
                     {/* Language */}
 
                     <select
-                            value={language}
-                            onChange={handleLanguageChange}
+                        value={language}
+                        onChange={handleLanguageChange}
                     >
 
-                        <option value="java">Java</option>
+                        <option value="java">
+                            Java
+                        </option>
 
-                        <option value="python">Python</option>
+                        <option value="python">
+                            Python
+                        </option>
 
-                        <option value="cpp">C++</option>
+                        <option value="cpp">
+                            C++
+                        </option>
 
-                        <option value="javascript">JavaScript</option>
+                        <option value="javascript">
+                            JavaScript
+                        </option>
 
                     </select>
+
 
                     {/* Theme */}
 
                     <select
                         value={theme}
-                        onChange={(e) => setTheme(e.target.value)}
+                        onChange={(e) =>
+                            setTheme(e.target.value)
+                        }
                     >
 
-                        <option value="vs-dark">Dark</option>
+                        <option value="vs-dark">
+                            Dark
+                        </option>
 
-                        <option value="light">Light</option>
+                        <option value="light">
+                            Light
+                        </option>
 
                     </select>
+
 
                     {/* Font Size */}
 
                     <select
                         value={fontSize}
-                        onChange={(e) => setFontSize(Number(e.target.value))}
+                        onChange={(e) =>
+                            setFontSize(
+                                Number(e.target.value)
+                            )
+                        }
                     >
 
                         <option value={14}>14</option>
@@ -98,6 +139,9 @@ function CodeEditor() {
 
             </div>
 
+
+            {/* Monaco Editor */}
+
             <div className="editor">
 
                 <Editor
@@ -110,7 +154,9 @@ function CodeEditor() {
 
                     value={code}
 
-                    onChange={(value) => setCode(value)}
+                    onChange={(value) =>
+                        onCodeChange(value || "")
+                    }
 
                     options={{
 
@@ -128,13 +174,41 @@ function CodeEditor() {
 
             </div>
 
+
+            {/* STDIN */}
+
+            <div className="stdin-container">
+
+                <label htmlFor="stdin">
+                    Standard Input
+                </label>
+
+                <textarea
+                    id="stdin"
+                    className="stdin-input"
+                    value={input}
+                    onChange={(e) =>
+                        setInput(e.target.value)
+                    }
+                    placeholder="Enter program input here..."
+                    spellCheck="false"
+                />
+
+            </div>
+
+
+            {/* Buttons */}
+
             <div className="editor-buttons">
 
-                <button className="run-btn">
-
-                    Run Code
-
+                <button
+                    className="run-btn"
+                    onClick={handleRunCode}
+                    disabled={isRunning}
+                >
+                    {isRunning ? "Running..." : "Run Code"}
                 </button>
+
 
                 <button className="submit-btn">
 

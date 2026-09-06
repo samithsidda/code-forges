@@ -1,64 +1,292 @@
-.code-room-container{
+/* ==========================================================================
+   CODE ROOM CONTAINER & HEADER STYLES
+   ========================================================================== */
+
+.code-room-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    background-color: #1e1e1e;
-    color: white;
+    min-height: 0;
+    background-color: var(--bg-darkest);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    overflow: hidden;
 }
 
 /* ================= HEADER ================= */
 
-.code-room-header{
+.code-room-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    padding: 15px 25px;
-
-    background-color: #252526;
-
-    border-bottom: 1px solid #3c3c3c;
+    padding: 0 20px;
+    height: 54px;
+    min-height: 54px;
+    background-color: #0d1117;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+    z-index: 50;
 }
 
-.code-room-header h1{
+.codeforge-brand h1 {
     margin: 0;
-    font-size: 26px;
-}
-
-/* ================= MAIN ================= */
-
-.code-room-main{
-
-    flex: 1;
-
-    display: grid;
-
-    grid-template-columns: 320px 1fr;
-
-    overflow: hidden;
-
-}
-
-/* Left Panel */
-
-.code-room-main > :first-child{
-
-    background-color: #252526;
-
-    border-right: 1px solid #3c3c3c;
-
-    overflow-y: auto;
-
-}
-
-/* Editor */
-
-.code-room-main > :last-child{
-
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
     display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
+.codeforge-brand h1::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--accent-primary);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent-primary);
+}
+
+.room-header-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.room-topic,
+.room-code-display {
+    display: flex;
     flex-direction: column;
+    justify-content: center;
+}
 
+.room-topic span,
+.room-code-display span {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+}
+
+.room-topic strong {
+    max-width: 240px;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
 
+.room-code-display strong {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: #60a5fa;
+    letter-spacing: 0.05em;
+}
+
+/* ================= MEMBERS DROPDOWN ================= */
+
+.members-dropdown-wrapper {
+    position: relative;
+}
+
+.members-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: var(--transition-fast);
+}
+
+.members-button:hover {
+    background-color: var(--bg-surface-hover);
+    border-color: #475569;
+}
+
+.members-arrow {
+    font-size: 8px;
+    color: var(--text-muted);
+    transition: var(--transition-fast);
+}
+
+.members-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 230px;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.members-dropdown-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(15, 23, 42, 0.5);
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    color: var(--text-primary);
+    font-size: 13px;
+    transition: var(--transition-fast);
+}
+
+.member-item:hover {
+    background-color: var(--bg-surface-hover);
+}
+
+.member-status {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background-color: var(--accent-success);
+    box-shadow: 0 0 6px var(--accent-success);
+}
+
+.no-members {
+    padding: 12px 14px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* ================= LEAVE ROOM BUTTON ================= */
+
+.leave-room-btn {
+    padding: 6px 14px;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: var(--radius-md);
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: var(--transition-fast);
+}
+
+.leave-room-btn:hover {
+    background: var(--accent-danger);
+    color: #ffffff;
+    border-color: var(--accent-danger);
+}
+
+/* ================= MAIN GRID ================= */
+
+.code-room-main {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr) 320px;
+    overflow: hidden;
+    background: var(--bg-darkest);
+}
+
+/* ================= VIDEO SIDEBAR ================= */
+
+.video-sidebar {
+    background-color: #0b0f17;
+    border-right: 1px solid var(--border-color);
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ================= EDITOR SECTION ================= */
+
+.editor-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background: #0d1117;
+}
+
+.editor-section > .editor-container {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    overflow: hidden;
+}
+
+.editor-section > .console-container {
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+}
+
+/* ================= AI SECTION ================= */
+
+.ai-section {
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border-left: 1px solid var(--border-color);
+    background: #0d1117;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1100px) {
+    .code-room-main {
+        grid-template-columns: 240px minmax(0, 1fr);
+    }
+
+    .ai-section {
+        position: fixed;
+        right: 0;
+        top: 54px;
+        bottom: 0;
+        width: 320px;
+        z-index: 100;
+        box-shadow: var(--shadow-lg);
+    }
+}
+
+@media (max-width: 800px) {
+    .code-room-main {
+        grid-template-columns: 200px minmax(0, 1fr);
+    }
+
+    .room-topic {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .code-room-main {
+        grid-template-columns: 1fr;
+    }
+
+    .video-sidebar {
+        display: none;
+    }
 }

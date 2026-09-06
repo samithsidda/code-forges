@@ -1,91 +1,68 @@
-.members-container{
+/* ==========================================================================
+   MEMBERS HOVER POPUP STYLES
+   ========================================================================== */
 
+.members-container {
     position: relative;
-
 }
 
-.members-btn{
-
-    background-color:#0078d4;
-
-    color:white;
-
-    border:none;
-
-    padding:10px 18px;
-
-    border-radius:8px;
-
-    cursor:pointer;
-
-    font-size:15px;
-
-    transition:.3s;
-
+.members-btn {
+    background-color: var(--accent-primary);
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: var(--transition-fast);
+    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
 }
 
-.members-btn:hover{
-
-    background:#106ebe;
-
+.members-btn:hover {
+    background-color: var(--accent-primary-hover);
+    transform: translateY(-1px);
 }
 
-.members-popup{
-
-    position:absolute;
-
-    right:0;
-
-    top:50px;
-
-    width:260px;
-
-    background:#252526;
-
-    border:1px solid #3c3c3c;
-
-    border-radius:10px;
-
-    box-shadow:0 8px 20px rgba(0,0,0,.4);
-
-    z-index:1000;
-
-    overflow:hidden;
-
+.members-popup {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    width: 250px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    overflow: hidden;
 }
 
-.member-item{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    padding:12px 15px;
-
-    border-bottom:1px solid #3c3c3c;
-
+.member-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 13px;
+    transition: var(--transition-fast);
 }
 
-.member-item:last-child{
-
-    border-bottom:none;
-
+.member-item:last-child {
+    border-bottom: none;
 }
 
-.member-item:hover{
-
-    background:#2d2d30;
-
+.member-item:hover {
+    background: var(--bg-surface-hover);
 }
 
-.member-role{
-
-    color:#8f8f8f;
-
-    font-size:13px;
-
-    text-transform:capitalize;
-
+.member-role {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    background: rgba(148, 163, 184, 0.1);
 }
