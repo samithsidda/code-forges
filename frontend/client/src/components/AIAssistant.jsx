@@ -1,4 +1,7 @@
-import { useState } from "react";
+import {
+    useEffect,
+    useState,
+} from "react";
 
 import api from "../api/axios";
 
@@ -8,6 +11,8 @@ import "../styles/AIAssistant.css";
 function AIAssistant({
     code,
     language,
+    socket,
+    roomCode,
 }) {
 
     const [messages, setMessages] =
@@ -32,6 +37,83 @@ function AIAssistant({
     const [isLoading, setIsLoading] =
         useState(false);
 
+
+    // =====================================
+    // RECEIVE REAL-TIME AI MESSAGES
+    // =====================================
+
+    useEffect(() => {
+
+        if (!socket) {
+            return;
+        }
+
+
+        const handleAIUserMessage =
+            (message) => {
+
+                setMessages(
+                    (previousMessages) => [
+
+                        ...previousMessages,
+
+                        message,
+
+                    ]
+                );
+
+            };
+
+
+        const handleAIResponse =
+            (message) => {
+
+                setMessages(
+                    (previousMessages) => [
+
+                        ...previousMessages,
+
+                        message,
+
+                    ]
+                );
+
+            };
+
+
+        socket.on(
+            "ai-user-message",
+            handleAIUserMessage
+        );
+
+
+        socket.on(
+            "ai-response",
+            handleAIResponse
+        );
+
+
+        return () => {
+
+            socket.off(
+                "ai-user-message",
+                handleAIUserMessage
+            );
+
+
+            socket.off(
+                "ai-response",
+                handleAIResponse
+            );
+
+        };
+
+    }, [socket]);
+
+
+    // =====================================
+    // SEND MESSAGE
+    // =====================================
 
     const sendMessage =
         async (
@@ -61,6 +143,8 @@ function AIAssistant({
             };
 
 
+            // Add message locally
+
             setMessages(
                 (previousMessages) => [
 
@@ -72,9 +156,29 @@ function AIAssistant({
             );
 
 
+            // Share with collaborators
+
+            socket?.emit(
+
+                "ai-user-message",
+
+                {
+
+                    roomCode,
+
+                    message:
+                        newUserMessage,
+
+                }
+
+            );
+
+
             setInput("");
 
-            setIsLoading(true);
+            setIsLoading(
+                true
+            );
 
 
             try {
@@ -115,24 +219,47 @@ function AIAssistant({
                     );
 
 
+                const aiMessage = {
+
+                    role:
+                        "assistant",
+
+                    content:
+                        response
+                            .data
+                            .response,
+
+                };
+
+
+                // Add locally
+
                 setMessages(
                     (previousMessages) => [
 
                         ...previousMessages,
 
-                        {
-
-                            role:
-                                "assistant",
-
-                            content:
-                                response
-                                    .data
-                                    .response,
-
-                        },
+                        aiMessage,
 
                     ]
+                );
+
+
+                // Share AI response
+
+                socket?.emit(
+
+                    "ai-response",
+
+                    {
+
+                        roomCode,
+
+                        message:
+                            aiMessage,
+
+                    }
+
                 );
 
 
@@ -146,33 +273,54 @@ function AIAssistant({
                 );
 
 
+                const errorMessage = {
+
+                    role:
+                        "assistant",
+
+                    content:
+
+                        err.response
+                            ?.data
+                            ?.message ||
+
+                        "Sorry, I was unable to process your request. Please try again.",
+
+                };
+
+
                 setMessages(
                     (previousMessages) => [
 
                         ...previousMessages,
 
-                        {
-
-                            role:
-                                "assistant",
-
-                            content:
-
-                                err.response
-                                    ?.data
-                                    ?.message ||
-
-                                "Sorry, I was unable to process your request. Please try again.",
-
-                        },
+                        errorMessage,
 
                     ]
                 );
 
 
+                socket?.emit(
+
+                    "ai-response",
+
+                    {
+
+                        roomCode,
+
+                        message:
+                            errorMessage,
+
+                    }
+
+                );
+
+
             } finally {
 
-                setIsLoading(false);
+                setIsLoading(
+                    false
+                );
 
             }
 
@@ -194,7 +342,6 @@ function AIAssistant({
         <aside
             className="ai-assistant"
         >
-
 
             <div
                 className="ai-header"
@@ -411,7 +558,6 @@ function AIAssistant({
                 </button>
 
             </form>
-
 
         </aside>
 

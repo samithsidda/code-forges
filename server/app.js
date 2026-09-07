@@ -51,7 +51,6 @@ const server =
     http.createServer(app);
 
 
-
 const allowedOrigins = [
     "http://localhost:5173",
     process.env.CLIENT_URL,
@@ -75,6 +74,12 @@ const io =
         },
 
     });
+
+
+app.set(
+    "io",
+    io
+);
 
 
 app.use(
@@ -279,49 +284,76 @@ io.on(
 
 
         // =====================================
-        // CODING ROOM
+        // JOIN CODING ROOM
         // =====================================
 
         socket.on(
             "join-room",
-            async (roomCode) => {
+            ({
+                roomCode,
+                userId,
+            }) => {
+
+                if (
+                    !roomCode
+                ) {
+
+                    console.log(
+                        "Join room failed: roomCode missing"
+                    );
+
+                    return;
+
+                }
+
 
                 socket.join(
                     roomCode
                 );
 
 
-                try {
+                /*
+                    Store room information on
+                    this socket.
 
-                    await Room.findOneAndUpdate(
+                    This is useful for tracking
+                    disconnects.
+                */
 
-                        {
-                            roomCode,
-                        },
+                socket.data.codingRoom =
+                    roomCode;
 
-                        {
-                            lastActivity:
-                                new Date(),
-                        }
 
-                    );
-
-                } catch (error) {
-
-                    console.error(
-
-                        "Room activity update error:",
-
-                        error
-
-                    );
-
-                }
+                socket.data.userId =
+                    userId;
 
 
                 console.log(
 
                     `Socket ${socket.id} joined room: ${roomCode}`
+
+                );
+
+
+                /*
+                    Notify everyone already
+                    inside the room.
+
+                    The joining user does NOT
+                    receive this event.
+                */
+
+                socket.to(
+                    roomCode
+                ).emit(
+
+                    "member-joined",
+
+                    {
+
+                        userId,
+
+                    }
 
                 );
 
@@ -419,16 +451,122 @@ io.on(
 
 
         // =====================================
+        // CONSOLE UPDATE
+        // =====================================
+
+        socket.on(
+            "console-update",
+            ({
+                roomCode,
+                output,
+                error,
+            }) => {
+
+                socket.to(
+                    roomCode
+                ).emit(
+                    "console-update",
+                    {
+                        output,
+                        error,
+                    }
+                );
+
+            }
+        );
+
+
+        // =====================================
+        // AI USER MESSAGE
+        // =====================================
+
+        socket.on(
+            "ai-user-message",
+            ({
+                roomCode,
+                message,
+            }) => {
+
+                socket.to(
+                    roomCode
+                ).emit(
+                    "ai-user-message",
+                    message
+                );
+
+            }
+        );
+
+
+        // =====================================
+        // AI RESPONSE
+        // =====================================
+
+        socket.on(
+            "ai-response",
+            ({
+                roomCode,
+                message,
+            }) => {
+
+                socket.to(
+                    roomCode
+                ).emit(
+                    "ai-response",
+                    message
+                );
+
+            }
+        );
+
+
+        // =====================================
         // LEAVE CODING ROOM
         // =====================================
 
         socket.on(
             "leave-room",
-            (roomCode) => {
+            ({
+                roomCode,
+                userId,
+            }) => {
+
+                if (
+                    !roomCode
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                    Notify other members BEFORE
+                    leaving the Socket.IO room.
+                */
+
+                socket.to(
+                    roomCode
+                ).emit(
+
+                    "member-left",
+
+                    {
+
+                        userId,
+
+                    }
+
+                );
+
 
                 socket.leave(
                     roomCode
                 );
+
+
+                socket.data.codingRoom =
+                    null;
 
 
                 console.log(
@@ -895,14 +1033,40 @@ io.on(
             () => {
 
                 /*
-                    IMPORTANT:
+                    Handle coding room disconnect.
+                */
 
-                    disconnecting happens BEFORE
-                    Socket.IO removes the socket
-                    from its rooms.
+                const codingRoom =
+                    socket.data.codingRoom;
 
-                    Therefore socket.rooms still
-                    contains video rooms here.
+
+                const userId =
+                    socket.data.userId;
+
+
+                if (
+                    codingRoom
+                ) {
+
+                    socket.to(
+                        codingRoom
+                    ).emit(
+
+                        "member-left",
+
+                        {
+
+                            userId,
+
+                        }
+
+                    );
+
+                }
+
+
+                /*
+                    Handle video rooms.
                 */
 
                 socket.rooms.forEach(

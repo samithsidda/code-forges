@@ -78,6 +78,53 @@ public class Main {
 
     /*
         =====================================
+        GET CURRENT USER
+        =====================================
+    */
+
+    const getCurrentUser =
+        () => {
+
+            try {
+
+                return JSON.parse(
+
+                    localStorage.getItem(
+                        "user"
+                    )
+
+                );
+
+            } catch (error) {
+
+                console.log(
+                    "Unable to read stored user."
+                );
+
+                return null;
+
+            }
+
+        };
+
+
+    const getCurrentUserId =
+        () => {
+
+            const user =
+                getCurrentUser();
+
+            return (
+                user?._id ||
+                user?.id ||
+                null
+            );
+
+        };
+
+
+    /*
+        =====================================
         FETCH ROOM DATA
         =====================================
     */
@@ -145,7 +192,9 @@ public class Main {
     useEffect(() => {
 
         if (!room?._id) {
+
             return;
+
         }
 
 
@@ -237,8 +286,14 @@ public class Main {
 
 
             if (!confirmLeave) {
+
                 return;
+
             }
+
+
+            const userId =
+                getCurrentUserId();
 
 
             try {
@@ -287,14 +342,21 @@ public class Main {
 
 
                 /*
-                    Leave Socket.IO coding room.
+                    Notify other members in
+                    real time.
                 */
 
                 socket.emit(
 
                     "leave-room",
 
-                    roomCode
+                    {
+
+                        roomCode,
+
+                        userId,
+
+                    }
 
                 );
 
@@ -333,7 +395,13 @@ public class Main {
 
                     "leave-room",
 
-                    roomCode
+                    {
+
+                        roomCode,
+
+                        userId,
+
+                    }
 
                 );
 
@@ -410,11 +478,85 @@ public class Main {
 
     /*
         =====================================
+        CONSOLE UPDATE
+        =====================================
+    */
+
+    const handleConsoleUpdate =
+        ({
+            output,
+            error,
+        }) => {
+
+            setConsoleOutput(
+                output
+            );
+
+
+            setConsoleError(
+                error
+            );
+
+
+            setIsRunning(
+                false
+            );
+
+        };
+
+
+    /*
+        =====================================
         SOCKET
         =====================================
     */
 
     useEffect(() => {
+
+        /*
+            Join the Socket.IO room using
+            the format expected by app.js.
+        */
+
+        const joinSocketRoom =
+            () => {
+
+                const userId =
+                    getCurrentUserId();
+
+
+                console.log(
+
+                    "Joining socket room:",
+
+                    {
+                        roomCode,
+                        userId,
+                    }
+
+                );
+
+
+                socket.emit(
+
+                    "join-room",
+
+                    {
+
+                        roomCode,
+
+                        userId,
+
+                    }
+
+                );
+
+            };
+
+
+        /*
+            SOCKET CONNECT
+        */
 
         const handleConnect =
             () => {
@@ -428,50 +570,83 @@ public class Main {
                 );
 
 
-                socket.emit(
-
-                    "join-room",
-
-                    roomCode
-
-                );
+                joinSocketRoom();
 
             };
 
+
+        /*
+            MEMBER JOINED
+
+            Backend sends the notification.
+            We fetch fresh member data from
+            MongoDB instead of manually
+            constructing member objects.
+        */
 
         const handleMemberJoined =
             () => {
 
-                fetchRoomData();
+                console.log(
 
-            };
+                    "Member joined - refreshing members"
+
+                );
 
 
-        const handleMemberLeft =
-            ({ userId }) => {
+                /*
+                    Small delay ensures the
+                    database membership write
+                    is available before fetch.
+                */
 
-                setMembers(
+                setTimeout(
 
-                    (currentMembers) =>
+                    () => {
 
-                        currentMembers.filter(
+                        fetchRoomData();
 
-                            (member) =>
+                    },
 
-                                String(
-
-                                    member.user?._id ||
-                                    member.user
-
-                                ) !==
-                                String(userId)
-
-                        )
+                    200
 
                 );
 
             };
 
+
+        /*
+            MEMBER LEFT
+        */
+
+        const handleMemberLeft =
+            () => {
+
+                console.log(
+
+                    "Member left - refreshing members"
+
+                );
+
+
+                setTimeout(
+
+                    () => {
+
+                        fetchRoomData();
+
+                    },
+
+                    200
+
+                );
+
+            };
+
+
+        /*
+            CODE UPDATE
+        */
 
         const handleCodeUpdate =
             (updatedCode) => {
@@ -482,6 +657,10 @@ public class Main {
 
             };
 
+
+        /*
+            ROOM EXPIRED
+        */
 
         const handleRoomExpired =
             () => {
@@ -497,6 +676,12 @@ public class Main {
 
             };
 
+
+        /*
+            =====================================
+            SOCKET LISTENERS
+            =====================================
+        */
 
         socket.on(
 
@@ -536,6 +721,15 @@ public class Main {
 
         socket.on(
 
+            "console-update",
+
+            handleConsoleUpdate
+
+        );
+
+
+        socket.on(
+
             "room-expired",
 
             handleRoomExpired
@@ -544,8 +738,9 @@ public class Main {
 
 
         /*
-            Only connect if the socket is
-            currently disconnected.
+            =====================================
+            CONNECT / JOIN ROOM
+            =====================================
         */
 
         if (!socket.connected) {
@@ -554,16 +749,21 @@ public class Main {
 
         } else {
 
-            socket.emit(
+            /*
+                Socket already exists,
+                so join the current room.
+            */
 
-                "join-room",
-
-                roomCode
-
-            );
+            joinSocketRoom();
 
         }
 
+
+        /*
+            =====================================
+            CLEANUP
+            =====================================
+        */
 
         return () => {
 
@@ -605,6 +805,15 @@ public class Main {
 
             socket.off(
 
+                "console-update",
+
+                handleConsoleUpdate
+
+            );
+
+
+            socket.off(
+
                 "room-expired",
 
                 handleRoomExpired
@@ -637,15 +846,10 @@ public class Main {
 
     const handleRunCode =
         async ({
-
             code,
-
             language,
-
             version,
-
             input = "",
-
         }) => {
 
             try {
@@ -716,6 +920,29 @@ public class Main {
                 );
 
 
+                /*
+                    SHARE CONSOLE OUTPUT
+                */
+
+                socket.emit(
+
+                    "console-update",
+
+                    {
+
+                        roomCode,
+
+                        output:
+                            response.data,
+
+                        error:
+                            null,
+
+                    }
+
+                );
+
+
             } catch (err) {
 
                 console.error(
@@ -726,11 +953,37 @@ public class Main {
                 );
 
 
-                setConsoleError(
+                const errorMessage =
 
                     err.response?.data?.message ||
 
-                    "Error running code"
+                    "Error running code";
+
+
+                setConsoleError(
+                    errorMessage
+                );
+
+
+                /*
+                    SHARE CONSOLE ERROR
+                */
+
+                socket.emit(
+
+                    "console-update",
+
+                    {
+
+                        roomCode,
+
+                        output:
+                            null,
+
+                        error:
+                            errorMessage,
+
+                    }
 
                 );
 
@@ -771,41 +1024,20 @@ public class Main {
         =====================================
     */
 
-    let currentUserName =
+    const currentUser =
+        getCurrentUser();
+
+
+    const currentUserName =
+        currentUser?.name ||
         "You";
 
 
-    try {
-
-        const storedUser =
-            JSON.parse(
-
-                localStorage.getItem(
-                    "user"
-                )
-
-            );
-
-
-        if (
-            storedUser?.name
-        ) {
-
-            currentUserName =
-                storedUser.name;
-
-        }
-
-    } catch (error) {
-
-        console.log(
-
-            "Unable to read stored user."
-
-        );
-
-    }
-
+    /*
+        =====================================
+        RENDER
+        =====================================
+    */
 
     return (
 
@@ -838,6 +1070,8 @@ public class Main {
                 >
 
 
+                    {/* TOPIC */}
+
                     <div
                         className="room-topic"
                     >
@@ -858,6 +1092,8 @@ public class Main {
 
                     </div>
 
+
+                    {/* ROOM CODE */}
 
                     <div
                         className="room-code-display"
@@ -992,6 +1228,8 @@ public class Main {
                     </div>
 
 
+                    {/* LEAVE ROOM */}
+
                     <button
 
                         className="leave-room-btn"
@@ -1116,6 +1354,14 @@ public class Main {
 
                         language={
                             language
+                        }
+
+                        socket={
+                            socket
+                        }
+
+                        roomCode={
+                            roomCode
                         }
 
                     />

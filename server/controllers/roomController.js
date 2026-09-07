@@ -57,6 +57,9 @@ const createRoom = async (req, res) => {
 // ===============================
 // JOIN ROOM
 // ===============================
+// ===============================
+// JOIN ROOM
+// ===============================
 const joinRoom = async (req, res) => {
   try {
     const { roomCode } = req.body;
@@ -84,6 +87,7 @@ const joinRoom = async (req, res) => {
     }
 
     room.lastActivity = new Date();
+
     await room.save();
 
     // Check if already a member
@@ -99,20 +103,28 @@ const joinRoom = async (req, res) => {
       });
     }
 
+    // Create new membership
     const member = await RoomMember.create({
       room: room._id,
       user: req.user.id,
       role: "member",
     });
 
-    // Notify other users
+    // Populate user details before sending
+    await member.populate(
+      "user",
+      "name email"
+    );
+
     const io = req.app.get("io");
 
     if (io) {
-      io.to(room.roomCode).emit("member-joined", {
-        roomCode: room.roomCode,
-        userId: String(req.user.id),
-      });
+      io.to(room.roomCode).emit(
+        "member-joined",
+        {
+          member,
+        }
+      );
     }
 
     res.status(200).json({
@@ -120,6 +132,7 @@ const joinRoom = async (req, res) => {
       room,
       member,
     });
+
   } catch (error) {
     console.error("Join room error:", error);
 
