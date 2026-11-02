@@ -1,333 +1,291 @@
-# CodeForges — Collaborative Online Coding Platform
+<div align="center">
 
-CodeForges is a full-stack collaborative coding platform that enables developers to solve coding problems together in real time. Users can create or join coding rooms, collaborate through a shared code editor, execute code, and leverage AI-powered coding assistance.
+# ⚡ CodeForges
 
-Built using the MERN stack, CodeForges combines real-time communication, code execution, authentication, and AI integration to create an interactive environment for collaborative programming.
+**Real-Time Collaborative Coding, Live P2P Video/Audio Calling, Online Code Execution & AI Assistant**
 
-## ✨ Features
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-Express_5-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Socket.IO](https://img.shields.io/badge/Socket.IO-Realtime-010101?logo=socket.io&logoColor=white)](https://socket.io/)
+[![WebRTC](https://img.shields.io/badge/WebRTC-Video_&_Audio-333333?logo=webrtc&logoColor=white)](https://webrtc.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Groq AI](https://img.shields.io/badge/Groq-AI_Assistant-F55036?logo=groq&logoColor=white)](https://groq.com/)
+[![Judge0](https://img.shields.io/badge/Judge0-Code_Execution-0052CC)](https://judge0.com/)
 
-- **Collaborative Coding Rooms:** Create and join rooms for collaborative programming sessions.
-- **Real-Time Code Synchronization:** Synchronize code changes between participants using Socket.IO.
-- **Integrated Code Editor:** Use Monaco Editor for a programming-focused editing experience.
-- **Code Execution:** Integrate Judge0 to submit and execute code.
-- **AI-Powered Coding Assistance:** Use the Groq API for coding assistance, test case generation, and code review.
-- **Authentication and Authorization:** Implement JWT-based authentication and Google/GitHub OAuth.
-- **Room and Problem Management:** Manage coding rooms, problems, and solution submissions through backend APIs.
-- **Full-Stack Architecture:** Connect a React frontend to a Node.js and Express backend with MongoDB.
-- **Deployment:** Deployment workflow using Vercel, Render, and MongoDB Atlas.
-
-## 🛠️ Tech Stack
-
-| Category | Technologies |
-|---|---|
-| Frontend | React.js, JavaScript |
-| Backend | Node.js, Express.js |
-| Database | MongoDB, Mongoose |
-| Real-Time Communication | Socket.IO |
-| Code Editor | Monaco Editor |
-| Code Execution | Judge0 API |
-| AI Integration | Groq API |
-| Authentication | JWT, Google OAuth, GitHub OAuth |
-| API Testing and Development | Postman |
-| Deployment | Vercel, Render, MongoDB Atlas |
-
-## 🏗️ Architecture
-
-CodeForges follows a client-server architecture.
-
-```text
-                    ┌────────────────────────┐
-                    │      React Frontend    │
-                    │                        │
-                    │  Coding Rooms          │
-                    │  Monaco Editor         │
-                    │  User Interface        │
-                    └───────────┬────────────┘
-                                │
-                    ┌───────────┴────────────┐
-                    │                        │
-              HTTP / REST              Socket.IO
-                    │                        │
-                    ▼                        ▼
-             ┌──────────────────────────────────┐
-             │       Node.js + Express          │
-             │                                  │
-             │  Authentication                 │
-             │  Room and Problem APIs           │
-             │  Solution Management             │
-             │  External API Integration        │
-             └───────────┬───────────┬──────────┘
-                         │           │
-                 ┌───────▼─────┐ ┌───▼────────────┐
-                 │   MongoDB   │ │ External APIs  │
-                 │             │ │                │
-                 │ Persistent  │ │ Judge0         │
-                 │ Application │ │ Groq           │
-                 │ Data        │ │ OAuth Providers│
-                 └─────────────┘ └────────────────┘
-```
-
-*This is a conceptual architecture. The exact responsibilities and connections should match the implementation in the repository.*
-
-### How It Works
-
-1. A user accesses the React frontend and authenticates.
-2. The user creates a coding room or joins an existing room.
-3. The frontend communicates with the backend through REST APIs for application operations.
-4. Socket.IO supports real-time communication between connected participants.
-5. Room, problem, and solution data can be stored and retrieved through MongoDB.
-6. Code submissions are sent to Judge0 for execution.
-7. Coding assistance requests are processed through the Groq API.
-
-## 🚀 Getting Started
-
-Follow these steps to run the project locally.
-
-### Prerequisites
-
-Install the following:
-
-- Node.js and npm
-- MongoDB or a MongoDB Atlas account
-- Git
-- A Judge0 API configuration
-- A Groq API key
-- OAuth credentials if you intend to use Google or GitHub login
-
-### 1. Clone the Repository
-
-```bash
-git clone <YOUR_REPOSITORY_URL>
-cd <YOUR_REPOSITORY_DIRECTORY>
-```
-
-Replace the placeholders with your actual GitHub repository URL and directory name.
-
-### 2. Install Dependencies
-
-Install dependencies separately for the frontend and backend, using the directories present in your repository.
-
-```bash
-# Backend
-cd server
-npm install
-
-# Frontend — return to the project root first
-cd ../client
-npm install
-```
-
-If your repository uses different directory names, substitute the actual paths.
-
-### 3. Configure Environment Variables
-
-Create a `.env` file in the backend directory and configure the variables required by your implementation.
-
-Example configuration template:
-
-```env
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-
-GROQ_API_KEY=your_groq_api_key
-
-JUDGE0_API_URL=your_judge0_api_url
-JUDGE0_API_KEY=your_judge0_api_key
-
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-
-GITHUB_CLIENT_ID=your_github_client_id
-GITHUB_CLIENT_SECRET=your_github_client_secret
-```
-
-**Important:** These names are illustrative. Match them to the environment variable names used in your source code. Some integrations may require additional configuration.
-
-Never commit real API keys, OAuth secrets, database credentials, or JWT secrets to GitHub.
-
-Add `.env` to `.gitignore`:
-
-```gitignore
-node_modules/
-.env
-.env.*
-!.env.example
-dist/
-build/
-```
-
-Keep `.env.example` limited to placeholder values.
-
-### 4. Start the Backend
-
-From the backend directory, run the development command configured in `package.json`.
-
-For example:
-
-```bash
-npm run dev
-```
-
-If your project uses a different script, use the appropriate command. The backend must connect successfully to the configured database and any required services.
-
-### 5. Start the Frontend
-
-Open another terminal and navigate to the frontend directory.
-
-```bash
-cd client
-npm run dev
-```
-
-Open the local URL printed by Vite or your configured frontend development server.
-
-If the backend and frontend use different ports, configure the frontend API base URL and CORS settings accordingly.
-
-## 🔌 Core Backend Capabilities
-
-The backend supports application operations related to rooms, problems, and solutions.
-
-| Capability | Purpose |
-|---|---|
-| Authentication | Register or authenticate users and verify protected requests |
-| Room management | Create and retrieve coding rooms |
-| Room participation | Allow users to join coding sessions |
-| Problem management | Create or assign coding problems |
-| Solution submission | Submit solutions for processing |
-| Code execution | Integrate with Judge0 |
-| AI assistance | Integrate coding-related requests with Groq |
-| Real-time events | Exchange collaborative updates through Socket.IO |
-
-The exact route paths, request payloads, response formats, and access permissions depend on the implemented backend routes.
-
-## ⚡ Real-Time Collaboration
-
-Socket.IO provides event-based communication between the client and server.
-
-A typical collaborative coding workflow involves:
-
-1. Connecting a participant to the real-time server.
-2. Associating the participant with the appropriate coding room.
-3. Sending code-change events from the editor.
-4. Broadcasting updates to the relevant participants.
-5. Handling disconnections and room membership changes.
-
-For a production-ready collaborative editor, additional considerations include preventing update loops, managing simultaneous edits, handling reconnects, and maintaining consistent editor state.
-
-## 🤖 AI-Powered Coding Assistance
-
-CodeForges integrates the Groq API to support AI-powered development assistance.
-
-Potential workflows include:
-
-- Explaining code and programming concepts.
-- Generating test cases for submitted code.
-- Reviewing code for potential issues.
-- Helping users understand errors and improve their solutions.
-
-The backend should validate incoming requests, handle model/API errors, and keep API credentials private. AI-generated suggestions should be reviewed rather than treated as guaranteed-correct output.
-
-## ▶️ Code Execution with Judge0
-
-Judge0 provides the code execution service.
-
-A typical execution flow is:
-
-1. The user writes code in Monaco Editor.
-2. The frontend submits the code and selected language to the backend.
-3. The backend forwards the submission to Judge0.
-4. Judge0 processes the execution request.
-5. The backend retrieves or receives the execution result, depending on the configured integration.
-6. The result is returned to the frontend for display.
-
-Execution handling should account for compilation errors, runtime errors, time limits, failed submissions, and external service outages. Untrusted code should be executed through a properly isolated execution service.
-
-## 🔐 Security Considerations
-
-Important security practices for CodeForges include:
-
-- Hashing passwords before storing them.
-- Verifying JWTs on protected endpoints.
-- Checking room membership and permissions before allowing restricted operations.
-- Validating and sanitizing request inputs.
-- Keeping API keys and OAuth secrets on the backend.
-- Applying suitable CORS policies and rate limits.
-- Handling external API errors without exposing secrets.
-- Preventing unauthorized access to rooms and solution data.
-
-Authentication establishes who the user is; authorization determines what that user is permitted to do.
-
-## 🧪 Testing and Debugging
-
-Useful tools and practices for testing CodeForges include:
-
-- **Postman:** Verify REST endpoints, request validation, and response codes.
-- **Unit tests:** Test isolated functions and business logic.
-- **Integration tests:** Test interactions between Express routes, middleware, and data layers.
-- **Real-time testing:** Verify that room participants receive the expected Socket.IO events.
-- **External API testing:** Check success responses, invalid requests, timeouts, and service failures.
-
-Automated tests can be added using Jest and Supertest where configured in the project.
-
-## 📁 Project Structure
-
-The following is a conceptual structure. Adapt it to the actual repository layout.
-
-```text
-CodeForges/
-├── client/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   └── ...
-│   └── package.json
-│
-├── server/
-│   ├── routes/
-│   ├── controllers/
-│   ├── models/
-│   ├── middleware/
-│   ├── config/
-│   ├── ...
-│   └── package.json
-│
-├── .gitignore
-└── README.md
-```
-
-## 🔮 Potential Future Improvements
-
-- Add robust collaborative editing conflict resolution.
-- Improve reconnect and session recovery behavior.
-- Expand automated unit and integration test coverage.
-- Introduce stronger room-level roles and permissions.
-- Add execution history and solution tracking.
-- Improve observability, error logging, and performance monitoring.
-- Strengthen CI/CD checks and deployment reliability.
-
-These are potential enhancements, not claims about currently implemented features.
-
-## 🎯 Learning Outcomes
-
-CodeForges brings together several practical full-stack engineering concepts:
-
-- Building RESTful APIs with Node.js and Express.
-- Designing and querying MongoDB data models.
-- Implementing authentication and protected routes.
-- Developing real-time features with Socket.IO.
-- Integrating a code editor and external execution service.
-- Connecting an LLM API to application workflows.
-- Debugging and coordinating multiple services in a full-stack application.
-
-## 👨‍💻 Author
-
-**Samith Sidda**
-
-- GitHub: [samithsidda](https://github.com/samithsidda)
-- LinkedIn: [samith-sidda](https://linkedin.com/in/samith-sidda-5679a0356)
+</div>
 
 ---
 
-If you find this project interesting, feel free to explore the code and share feedback.
+## 📖 Overview
+
+**CodeForges** is a collaborative developer platform and online pair-programming environment. Designed for technical interviews, algorithm practice, and collaborative problem-solving, CodeForges allows developers to code together in real-time inside a Monaco-powered IDE, communicate with built-in low-latency WebRTC video and audio, execute code remotely across multiple languages, and leverage a shared AI coding assistant powered by Groq.
+
+---
+
+## ✨ Features
+
+- 🔄 **Real-Time Synchronized Code Editor**
+  - Powered by Monaco Editor (the editor that drives VS Code) with syntax highlighting, custom font scaling, and theme switching.
+  - Sub-millisecond code synchronization across all room participants via Socket.IO.
+  - Multi-language support: **Java**, **Python**, **C++**, and **JavaScript** with pre-configured boilerplates.
+
+- 📹 **Integrated WebRTC Video & Audio Calling**
+  - Peer-to-peer (P2P) mesh WebRTC video and voice chat right in the workspace.
+  - Toggle camera and microphone on/off with live status updates broadcast to peers.
+  - Collapsible/expandable video call pane designed not to distract from code.
+
+- 🤖 **Groq-Powered AI Coding Assistant**
+  - Context-aware AI assistant integrated directly into each coding room.
+  - One-click quick actions: **Test Cases Generation**, **Edge Cases Analysis**, **Conceptual Hints**, and **Code Reviews** (complexity & bug identification).
+  - Synchronized AI chat history: prompts and AI responses are shared across room members in real time.
+
+- ⚙️ **Cloud Code Execution (Judge0)**
+  - Remote code compilation and execution backed by the Judge0 API.
+  - Interactive standard input (stdin) and output (stdout / stderr / compile errors).
+  - Runtime metrics including execution time and memory consumption.
+  - Shared console updates broadcast instantly across the room.
+
+- 👥 **Room Management & Automatic Cleanup**
+  - Create custom rooms with unique 6-character alphanumeric room codes.
+  - Distinct member and owner roles with member lists and real-time presence tracking.
+  - Problem assignment and solution submissions per room.
+  - Automatic background cleanup routine expiring inactive rooms after 30 minutes of inactivity.
+
+- 🔐 **Robust Authentication**
+  - Standard email & password registration and login with bcrypt password hashing and JWT sessions.
+  - **Google OAuth 2.0** and **GitHub OAuth** authentication flows with secure state validation.
+  - Protected client routes and authenticated API middleware.
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Framework**: React 19, Vite 8
+- **Routing**: React Router 7
+- **Editor**: Monaco Editor (`@monaco-editor/react`)
+- **Styling**: Tailwind CSS 4 & Custom CSS modules
+- **Networking & Real-Time**: Socket.IO Client, Axios, Native WebRTC (`RTCPeerConnection`)
+
+### Backend
+- **Runtime**: Node.js, Express 5
+- **Real-Time Engine**: Socket.IO (WebSockets & Signaling)
+- **Database**: MongoDB via Mongoose ORM
+- **Authentication**: JWT (`jsonwebtoken`), `bcryptjs`, `cookie-parser`, `google-auth-library`
+- **Compiler**: Judge0 CE API via RapidAPI
+- **AI Engine**: Groq SDK (`openai/gpt-oss-20b`)
+
+---
+
+## 📁 Repository Structure
+
+```text
+CodeForges/
+├── server/                          # Backend Express & Socket.IO server
+│   ├── config/                      # Database connection (db.js)
+│   ├── controllers/                 # Business logic controllers
+│   │   ├── aiController.js          # Groq AI prompt engineering & chat
+│   │   ├── authController.js        # Auth, Google OAuth & GitHub OAuth
+│   │   ├── compilerController.js    # Judge0 code execution runner
+│   │   ├── loginController.js       # Local login handler
+│   │   ├── problemController.js     # Problem management
+│   │   ├── roomController.js        # Room lifecycle & memberships
+│   │   ├── solutionController.js    # Problem submissions
+│   │   └── userController.js        # User profiles
+│   ├── middleware/                  # JWT auth validation middleware
+│   ├── models/                      # Mongoose models (User, Room, Problem, etc.)
+│   ├── routes/                      # Express REST API routes
+│   ├── app.js                       # Express app, HTTP & Socket.IO server setup
+│   └── package.json
+│
+├── frontend/                        # Frontend workspace
+│   └── client/                      # React + Vite application
+│       ├── public/                  # Static assets
+│       ├── src/
+│       │   ├── api/                 # Axios API client setup
+│       │   ├── components/          # Reusable UI components
+│       │   │   ├── AIAssistant.jsx  # AI side panel with quick prompts
+│       │   │   ├── CodeEditor.jsx   # Monaco code editor interface
+│       │   │   ├── Console.jsx      # Execution output & stdin console
+│       │   │   ├── LeftPanel.jsx    # Collapsible sidebar controls
+│       │   │   ├── ProblemPanel.jsx # Problem statement view
+│       │   │   ├── VideoCall.jsx    # WebRTC multi-party video call
+│       │   │   └── ...
+│       │   ├── pages/               # Route views (Home, Dashboard, Room, etc.)
+│       │   ├── socket/              # Socket.IO client instance
+│       │   ├── styles/              # Component stylesheets
+│       │   ├── utils/               # Supported language configurations
+│       │   ├── App.jsx              # React routes definition
+│       │   └── main.jsx             # React entrypoint
+│       ├── index.html
+│       ├── package.json
+│       └── vite.config.js
+└── README.md
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18.x or higher)
+- [npm](https://www.npmjs.com/) or [pnpm](https://pnpm.io/)
+- [MongoDB](https://www.mongodb.com/) (local instance or MongoDB Atlas URI)
+
+External API Keys needed:
+- **Groq API Key** (from [Groq Console](https://console.groq.com/))
+- **RapidAPI Key** for Judge0 CE (from [RapidAPI Judge0](https://rapidapi.com/judge0-official/api/judge0-ce))
+- *(Optional)* Google OAuth Client ID & Secret
+- *(Optional)* GitHub OAuth Client ID & Secret
+
+---
+
+### Installation & Setup
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/samithsidda/code-forges.git
+cd code-forges
+```
+
+#### 2. Configure Backend (`server/`)
+
+1. Navigate to the `server` directory and install dependencies:
+   ```bash
+   cd server
+   npm install
+   ```
+
+2. Create a `.env` file in `server/` with the following variables:
+   ```env
+   PORT=5000
+   MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/codeforges?retryWrites=true&w=majority
+   JWT_SECRET=your_super_secret_jwt_key
+   CLIENT_URL=http://localhost:5173
+   BACKEND_URL=http://localhost:5000
+
+   # Judge0 Compiler API (RapidAPI)
+   RAPIDAPI_KEY=your_rapidapi_judge0_key
+
+   # Groq AI
+   GROQ_API_KEY=your_groq_api_key
+
+   # OAuth Credentials (Optional for local testing)
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   GITHUB_CLIENT_ID=your_github_client_id
+   GITHUB_CLIENT_SECRET=your_github_client_secret
+   ```
+
+3. Start the backend development server:
+   ```bash
+   npm run dev
+   ```
+   *The server runs by default at `http://localhost:5000`.*
+
+---
+
+#### 3. Configure Frontend (`frontend/client/`)
+
+1. Open a new terminal window, navigate to `frontend/client`, and install dependencies:
+   ```bash
+   cd frontend/client
+   npm install
+   ```
+
+2. Create a `.env` file in `frontend/client/`:
+   ```env
+   VITE_API_URL=http://localhost:5000/api
+   VITE_SOCKET_URL=http://localhost:5000
+   ```
+
+3. Start the Vite development server:
+   ```bash
+   npm run dev
+   ```
+   *The client will be running at `http://localhost:5173`.*
+
+---
+
+## 📡 API Reference
+
+### Authentication (`/api/auth`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/register` | Register new user with email & password |
+| `POST` | `/api/auth/login` | Log in existing user with email & password |
+| `GET` | `/api/auth/me` | Fetch authenticated user profile |
+| `GET` | `/api/auth/google` | Initiate Google OAuth redirect |
+| `GET` | `/api/auth/google/callback` | Google OAuth callback handler |
+| `GET` | `/api/auth/github` | Initiate GitHub OAuth redirect |
+| `GET` | `/api/auth/github/callback` | GitHub OAuth callback handler |
+
+### Rooms (`/api/rooms`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/rooms` | Create a new coding room |
+| `POST` | `/api/rooms/join` | Join room via 6-letter room code |
+| `GET` | `/api/rooms` | Get rooms created by or joined by current user |
+| `GET` | `/api/rooms/:roomCode` | Retrieve room details and member list |
+| `POST` | `/api/rooms/:id/heartbeat` | Update room activity timestamp |
+| `POST` | `/api/rooms/:id/leave` | Leave a room |
+| `DELETE` | `/api/rooms/:id` | Delete room (owner only) |
+| `PUT` | `/api/rooms/:id/problem` | Assign a coding challenge to room |
+
+### Code Execution (`/api/compiler`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/compiler/run` | Execute code with Judge0 CE (supports Java, Python, C++, JS) |
+
+### AI Assistant (`/api/ai`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/ai/chat` | Send code context and question to Groq assistant |
+
+### Solutions (`/api/solutions`)
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/solutions` | Submit code solution for an assigned problem |
+| `GET` | `/api/solutions/:roomId` | Get current user's submitted solution in room |
+
+---
+
+## 🔌 Socket.IO Events
+
+| Event Name | Direction | Payload | Description |
+|---|---|---|---|
+| `join-room` | Client ➔ Server | `{ roomCode, userId }` | Join the coding collaboration channel |
+| `member-joined` | Server ➔ Client | `{ userId }` / `{ member }` | Broadcast when a collaborator joins |
+| `code-change` | Client ➔ Server | `{ roomCode, code }` | Emit updated editor contents |
+| `code-update` | Server ➔ Client | `code` | Receive latest code updates from peers |
+| `console-update` | Client ⇄ Server | `{ roomCode, output, error }` | Sync compiler execution outputs |
+| `ai-user-message` | Client ⇄ Server | `{ roomCode, message }` | Sync user questions to the AI assistant |
+| `ai-response` | Client ⇄ Server | `{ roomCode, message }` | Sync AI replies across room participants |
+| `join-video-room` | Client ➔ Server | `{ roomCode, name }` | Join WebRTC video signaling room |
+| `webrtc-offer` | Client ⇄ Server | `{ targetSocketId, offer }` | WebRTC SDP offer exchange |
+| `webrtc-answer` | Client ⇄ Server | `{ targetSocketId, answer }` | WebRTC SDP answer exchange |
+| `webrtc-ice-candidate` | Client ⇄ Server | `{ targetSocketId, candidate }` | WebRTC ICE candidate signaling |
+| `camera-toggle` / `mic-toggle` | Client ⇄ Server | `{ roomCode, cameraOn / micOn }` | Broadcast media track mute states |
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the [ISC License](LICENSE).
+
